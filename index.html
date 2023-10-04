@@ -26,6 +26,60 @@
             </tbody>
         </table>
     </div>
+    <script>
+        document.getElementById('agregarEdadBtn').addEventListener('click', () => {
+            const edadInput = document.getElementById('edad');
+            const edad = parseInt(edadInput.value);
+
+            fetch('/agregar-edad', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ edad })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                // Manejar la respuesta del servidor si es necesario
+                console.log(data);
+                // Actualizar la lista de edades en la página
+                obtenerEdades();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        });
+
+        // Función para obtener las edades desde el servidor
+        function obtenerEdades() {
+            fetch('/obtener-edades')
+                .then((response) => response.json())
+                .then((data) => {
+                    // Manejar la respuesta del servidor si es necesario
+                    console.log(data);
+                    // Actualizar la lista de edades en la página
+                    actualizarListaEdades(data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+
+        // Función para actualizar la lista de edades en la página
+        function actualizarListaEdades(edades) {
+            const listaEdades = document.getElementById('listaEdades');
+            listaEdades.innerHTML = ''; // Limpiar la lista antes de actualizar
+
+            edades.forEach((edad) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Edad: ${edad.edad}`;
+                listaEdades.appendChild(listItem);
+            });
+        }
+
+        // Llamar a obtenerEdades al cargar la página para mostrar las edades almacenadas
+        obtenerEdades();
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
